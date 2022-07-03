@@ -1,81 +1,63 @@
 // ROHIT SINGH MEGE SORT
 #include <iostream>
 using namespace std;
+void merge(int *,int, int , int );
 
-
-void merge(int array[], int const left, int const mid, int const right)
+void merge_sort(int *arr, int low, int high)
 {
-	auto const subArrayOne = mid - left + 1;
-	auto const subArrayTwo = right - mid;
-
-	auto *leftArray = new int[subArrayOne],
-		*rightArray = new int[subArrayTwo];
-
-
-	for (auto i = 0; i < subArrayOne; i++)
-		leftArray[i] = array[left + i];
-	for (auto j = 0; j < subArrayTwo; j++)
-		rightArray[j] = array[mid + 1 + j];
-
-	auto indexOfSubArrayOne = 0,  
-	
-		indexOfSubArrayTwo = 0;  
-		
-	int indexOfMergedArray = left;  
-	
-	while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
-		if (leftArray[indexOfSubArrayOne] <= rightArray[indexOfSubArrayTwo]) {
-			array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-			indexOfSubArrayOne++;
-		}
-		else {
-			array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-			indexOfSubArrayTwo++;
-		}
-		indexOfMergedArray++;
-	}
-
-
-	while (indexOfSubArrayOne < subArrayOne) {
-		array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-		indexOfSubArrayOne++;
-		indexOfMergedArray++;
-	}
-	while (indexOfSubArrayTwo < subArrayTwo) {
-		array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-		indexOfSubArrayTwo++;
-		indexOfMergedArray++;
-	}
+    int mid;
+    if (low < high){
+        //divide the array at mid and sort independently using merge sort
+        mid=(low+high)/2;
+        merge_sort(arr,low,mid);
+        merge_sort(arr,mid+1,high);
+        //merge or conquer sorted arrays
+        merge(arr,low,high,mid);
+    }
 }
-
-void mergeSort(int array[], int const begin, int const end)
+// Merge sort 
+void merge(int *arr, int low, int high, int mid)
 {
-	if (begin >= end)
-		return; 
-
-	auto mid = begin + (end - begin) / 2;
-	mergeSort(array, begin, mid);
-	mergeSort(array, mid + 1, end);
-	merge(array, begin, mid, end);
+    int i, j, k, c[50];
+    i = low;
+    k = low;
+    j = mid + 1;
+    while (i <= mid && j <= high) {
+        if (arr[i] < arr[j]) {
+            c[k] = arr[i];
+            k++;
+            i++;
+        }
+        else  {
+            c[k] = arr[j];
+            k++;
+            j++;
+        }
+    }
+    while (i <= mid) {
+        c[k] = arr[i];
+        k++;
+        i++;
+    }
+    while (j <= high) {
+        c[k] = arr[j];
+        k++;
+        j++;
+    }
+    for (i = low; i < k; i++)  {
+        arr[i] = c[i];
+    }
 }
-
-void printArray(int A[], int size)
-{
-	for (auto i = 0; i < size; i++)
-		cout << A[i] << " ";
-}
+// read input array and call mergesort
 int main()
 {
-	int arr[] = { 12, 11, 13, 5, 6, 7 };
-	auto arr_size = sizeof(arr) / sizeof(arr[0]);
-
-	cout << "Given array is \n";
-	printArray(arr, arr_size);
-
-	mergeSort(arr, 0, arr_size - 1);
-
-	cout << "\nSorted array is \n";
-	printArray(arr, arr_size);
-	return 0;
+    int myarray[] ={21,43,4,14,53,34,35,353,51};
+    int num = sizeof(myarray)/sizeof(int);
+    
+    merge_sort(myarray, 0, num-1);
+    cout<<"Sorted array\n";
+    for (int i = 0; i < num; i++)
+    {
+        cout<<myarray[i]<<"\t";
+    }
 }
-
